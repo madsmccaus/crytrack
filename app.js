@@ -84,3 +84,36 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDashboardPrices();                     // Initial fetch
   setInterval(updateDashboardPrices, 60000);   // Refresh every 60s
 });
+
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+// Load saved theme or default to system
+function applyTheme(theme) {
+  root.setAttribute('data-color-scheme', theme);
+  localStorage.setItem('preferredTheme', theme);
+}
+
+function toggleTheme() {
+  const current = root.getAttribute('data-color-scheme');
+  const newTheme = current === 'dark' ? 'light' : 'dark';
+  applyTheme(newTheme);
+}
+
+// Initialize theme from saved preference
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('preferredTheme');
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(savedTheme || systemTheme);
+
+  // Price fetch and refresh
+  updateDashboardPrices();
+  setInterval(updateDashboardPrices, 60000);
+
+  // Theme toggle listener
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+});
+
