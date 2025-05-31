@@ -1,4 +1,4 @@
-// app.js (use as a module in index.html)
+// app.js (loaded as a module)
 
 async function fetchPrices() {
   const prices = {
@@ -80,28 +80,7 @@ async function updateDashboardPrices() {
   if (dogeElem) dogeElem.textContent = `$${prices.DOGE}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateDashboardPrices();                     // Initial fetch
-  setInterval(updateDashboardPrices, 60000);   // Refresh every 60s
-});
-
-// Theme Toggle
-const themeToggle = document.getElementById('themeToggle');
-const root = document.documentElement;
-
-// Load saved theme or default to system
-function applyTheme(theme) {
-  root.setAttribute('data-color-scheme', theme);
-  localStorage.setItem('preferredTheme', theme);
-}
-
-function toggleTheme() {
-  const current = root.getAttribute('data-color-scheme');
-  const newTheme = current === 'dark' ? 'light' : 'dark';
-  applyTheme(newTheme);
-}
-
-// Initialize theme from saved preference
+// === Initialize Everything Once DOM is Ready ===
 document.addEventListener('DOMContentLoaded', () => {
   // === Theme Setup ===
   const root = document.documentElement;
@@ -126,14 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', toggleTheme);
   }
 
-  // === Crypto Data Setup ===
+  // === Price Data Setup ===
   updateDashboardPrices();
   setInterval(updateDashboardPrices, 60000);
 });
-
-  // Theme toggle listener
-  if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
-  }
-});
-
