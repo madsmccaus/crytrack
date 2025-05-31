@@ -7,7 +7,6 @@ async function fetchPrices() {
     DOGE: []
   };
 
-  // === CoinGecko ===
   try {
     const res = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,dogecoin&vs_currencies=usd'
@@ -20,7 +19,6 @@ async function fetchPrices() {
     console.error('CoinGecko failed:', err);
   }
 
-  // === CoinMarketCap ===
   try {
     const res = await fetch(
       'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,DOGE',
@@ -38,7 +36,6 @@ async function fetchPrices() {
     console.error('CoinMarketCap failed:', err);
   }
 
-  // === CryptoCompare ===
   try {
     const urls = {
       BTC: 'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD',
@@ -80,9 +77,8 @@ async function updateDashboardPrices() {
   if (dogeElem) dogeElem.textContent = `$${prices.DOGE}`;
 }
 
-// === Initialize Everything Once DOM is Ready ===
-document.addEventListener('DOMContentLoaded', () => {
-  async function fetchPolicyNews() {
+// === Policy News ===
+async function fetchPolicyNews() {
   const endpoint = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml';
 
   try {
@@ -93,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       /sec|regulation|policy|crypto law|cftc|mica|executive order/i.test(item.title + item.description)
     );
 
-    renderPolicyNews(filtered.slice(0, 6)); // Top 6 relevant items
+    renderPolicyNews(filtered.slice(0, 6));
   } catch (err) {
     console.error('Policy news fetch failed:', err);
   }
@@ -104,45 +100,4 @@ function renderPolicyNews(articles) {
   if (!container) return;
 
   container.innerHTML = articles
-    .map(article => `
-      <div class="card" style="margin-bottom: 24px;">
-        <div class="card__body">
-          <h3 style="margin-bottom: 8px;">${article.title}</h3>
-          <p style="color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px;">
-            ${new Date(article.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-          </p>
-          <p>${article.description.slice(0, 200)}...</p>
-          <a href="${article.link}" target="_blank" class="btn btn--sm btn--outline" style="margin-top: 12px;">Read more</a>
-        </div>
-      </div>
-    `)
-    .join('');
-}
-
-  // === Theme Setup ===
-  const root = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
-
-  function applyTheme(theme) {
-    root.setAttribute('data-color-scheme', theme);
-    localStorage.setItem('preferredTheme', theme);
-  }
-
-  function toggleTheme() {
-    const current = root.getAttribute('data-color-scheme');
-    const newTheme = current === 'dark' ? 'light' : 'dark';
-    applyTheme(newTheme);
-  }
-
-  const savedTheme = localStorage.getItem('preferredTheme');
-  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  applyTheme(savedTheme || systemTheme);
-
-  if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
-  }
-
-  // === Price Data Setup ===
-  updateDashboardPrices();
-  setInterval(updateDashboardPrices, 60000);
-});
+    .map(ar
