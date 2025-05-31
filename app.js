@@ -103,13 +103,33 @@ function toggleTheme() {
 
 // Initialize theme from saved preference
 document.addEventListener('DOMContentLoaded', () => {
+  // === Theme Setup ===
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-color-scheme', theme);
+    localStorage.setItem('preferredTheme', theme);
+  }
+
+  function toggleTheme() {
+    const current = root.getAttribute('data-color-scheme');
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
+  }
+
   const savedTheme = localStorage.getItem('preferredTheme');
   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   applyTheme(savedTheme || systemTheme);
 
-  // Price fetch and refresh
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+
+  // === Crypto Data Setup ===
   updateDashboardPrices();
   setInterval(updateDashboardPrices, 60000);
+});
 
   // Theme toggle listener
   if (themeToggle) {
