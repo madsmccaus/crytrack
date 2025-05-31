@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Track real-time data and trends for Bitcoin, Ethereum, and Dogecoin with this multi-crypto dashboard." />
+  <meta property="og:title" content="Multi-Crypto Dashboard" />
+  <meta property="og:description" content="Live updates and analysis on Bitcoin, Ethereum, and Dogecoin." />
   <title>Multi-Crypto Dashboard: Bitcoin, Ethereum & Dogecoin Tracker</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body data-color-scheme="dark">
-  <div class="container">
+  <main class="container">
     <!-- Header -->
     <header class="header">
       <div class="header-content">
@@ -18,17 +21,17 @@
     </header>
 
     <!-- Tab Navigation -->
-    <nav class="tab-nav">
+    <nav class="tab-nav" aria-label="Main Navigation">
       <button class="tab-button active" data-tab="overview">Overview</button>
       <button class="tab-button" data-tab="policy">Policy Changes</button>
       <button class="tab-button" data-tab="predictions">Price Predictions</button>
       <button class="tab-button" data-tab="news">Major News Events</button>
       <button class="tab-button" data-tab="performance">Price Performance</button>
-      <button id="themeToggle" class="btn btn--secondary">🌙 Toggle Theme</button>
+      <button id="themeToggle" class="btn btn--secondary" aria-label="Toggle Light/Dark Theme">🌙 Toggle Theme</button>
     </nav>
 
     <!-- Tab Content -->
-    <main class="tab-content">
+    <section class="tab-content">
       <!-- Overview Tab -->
       <section id="overview" class="tab-panel active">
         <!-- (Overview content remains unchanged) -->
@@ -118,9 +121,15 @@
           </div>
         </div>
       </section>
-    </main>
-  </div>
+    </section>
 
-  <script type="module" src="app.js"></script>
+    <footer>
+      <p style="text-align: center; font-size: 0.8rem; color: var(--color-text-secondary); padding: 20px 0;">
+        © 2025 Multi-Crypto Dashboard. Data from CoinGecko, CryptoCompare, CoinMarketCap, and Coindesk.
+      </p>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js" defer></script>
 </body>
 </html>
