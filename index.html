@@ -3,333 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Crypto Dashboard: Bitcoin, Ethereum & Dogecoin Tracker</title>
+    <title>CryptoDash - Live Cryptocurrency Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body data-color-scheme="dark">
-    <div class="container">
-        <!-- Header -->
+<body>
+    <div class="app">
+        <!-- Header with Navigation -->
         <header class="header">
-            <div class="header-content">
-                <h1>Multi-Crypto Dashboard: Bitcoin, Ethereum & Dogecoin Tracker</h1>
-                <p class="header-date">Friday, May 30, 2025, 11:10 PM</p>
+            <div class="container">
+                <div class="header__content">
+                    <div class="header__brand">
+                        <h1 class="brand-title">CryptoDash</h1>
+                        <span class="brand-subtitle">Live Crypto Analytics</span>
+                    </div>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <div class="theme-toggle">
+                        <button id="themeToggle" class="theme-toggle__btn" aria-label="Toggle dark mode">
+                            <span class="theme-toggle__icon theme-toggle__icon--light">☀️</span>
+                            <span class="theme-toggle__icon theme-toggle__icon--dark">🌙</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <nav class="nav-tabs">
+                    <button class="nav-tab nav-tab--active" data-page="overview">Overview</button>
+                    <button class="nav-tab" data-page="bitcoin">Bitcoin</button>
+                    <button class="nav-tab" data-page="ethereum">Ethereum</button>
+                    <button class="nav-tab" data-page="dogecoin">Dogecoin</button>
+                    <button class="nav-tab" data-page="news">News</button>
+                    <button class="nav-tab" data-page="policy">Policy</button>
+                    <button class="nav-tab" data-page="predictions">Predictions</button>
+                </nav>
             </div>
         </header>
 
-        <!-- Tab Navigation -->
-        <nav class="tab-nav">
-            <button class="tab-btn active" data-tab="overview">Overview</button>
-            <button class="tab-btn" data-tab="policy">Policy Changes</button>
-            <button class="tab-btn" data-tab="predictions">Price Predictions</button>
-            <button class="tab-btn" data-tab="news">Major News Events</button>
-            <button class="tab-btn" data-tab="performance">Price Performance</button>
-        </nav>
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Loading State -->
+                <div id="loadingState" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading cryptocurrency data...</p>
+                </div>
 
-        <!-- Tab Content -->
-        <main class="tab-content">
-            <!-- Overview Tab -->
-            <section id="overview" class="tab-panel active">
-                <div class="crypto-grid">
-                    <div class="crypto-card bitcoin">
-                        <div class="crypto-header">
-                            <h3>Bitcoin (BTC)</h3>
-                            <span class="crypto-symbol">₿</span>
+                <!-- Error State -->
+                <div id="errorState" class="error-state hidden">
+                    <div class="error-icon">⚠️</div>
+                    <h3>Unable to fetch data</h3>
+                    <p>Please check your internet connection and try again.</p>
+                    <button id="retryBtn" class="btn btn--primary">Retry</button>
+                </div>
+
+                <!-- Overview Page -->
+                <div id="overviewPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Market Overview</h2>
+                        <div class="last-updated">
+                            Last updated: <span id="lastUpdated">--</span>
                         </div>
-                        <div class="price-section">
-                            <div class="current-price">$105,745.40</div>
-                            <div class="price-change negative">-1.94% (-$2,092.80)</div>
+                    </div>
+                    
+                    <div class="crypto-grid">
+                        <div class="crypto-card" id="btc-card">
+                            <div class="crypto-card__header">
+                                <div class="crypto-card__name">
+                                    <span class="crypto-symbol">BTC</span>
+                                    <span class="crypto-full-name">Bitcoin</span>
+                                </div>
+                                <div class="crypto-card__change" id="btc-change">--</div>
+                            </div>
+                            <div class="crypto-card__price" id="btc-price">$--</div>
+                            <div class="crypto-card__details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Market Cap</span>
+                                    <span class="detail-value" id="btc-market-cap">$--</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Volume (24h)</span>
+                                    <span class="detail-value" id="btc-volume">$--</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="crypto-stats">
-                            <div class="stat">
-                                <span class="stat-label">Market Cap:</span>
-                                <span class="stat-value">$2.07T</span>
+
+                        <div class="crypto-card" id="eth-card">
+                            <div class="crypto-card__header">
+                                <div class="crypto-card__name">
+                                    <span class="crypto-symbol">ETH</span>
+                                    <span class="crypto-full-name">Ethereum</span>
+                                </div>
+                                <div class="crypto-card__change" id="eth-change">--</div>
                             </div>
-                            <div class="stat">
-                                <span class="stat-label">Year Change:</span>
-                                <span class="stat-value positive">+56.48%</span>
+                            <div class="crypto-card__price" id="eth-price">$--</div>
+                            <div class="crypto-card__details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Market Cap</span>
+                                    <span class="detail-value" id="eth-market-cap">$--</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Volume (24h)</span>
+                                    <span class="detail-value" id="eth-volume">$--</span>
+                                </div>
                             </div>
-                            <div class="stat">
-                                <span class="stat-label">ATH:</span>
-                                <span class="stat-value">$111,814</span>
+                        </div>
+
+                        <div class="crypto-card" id="doge-card">
+                            <div class="crypto-card__header">
+                                <div class="crypto-card__name">
+                                    <span class="crypto-symbol">DOGE</span>
+                                    <span class="crypto-full-name">Dogecoin</span>
+                                </div>
+                                <div class="crypto-card__change" id="doge-change">--</div>
+                            </div>
+                            <div class="crypto-card__price" id="doge-price">$--</div>
+                            <div class="crypto-card__details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Market Cap</span>
+                                    <span class="detail-value" id="doge-market-cap">$--</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Volume (24h)</span>
+                                    <span class="detail-value" id="doge-volume">$--</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="crypto-card ethereum">
-                        <div class="crypto-header">
-                            <h3>Ethereum (ETH)</h3>
-                            <span class="crypto-symbol">Ξ</span>
-                        </div>
-                        <div class="price-section">
-                            <div class="current-price">$2,633.14</div>
-                            <div class="price-change negative">-1.61% (-$43.13)</div>
-                        </div>
-                        <div class="crypto-stats">
-                            <div class="stat">
-                                <span class="stat-label">Market Cap:</span>
-                                <span class="stat-value">$305.52B</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Year Change:</span>
-                                <span class="stat-value negative">-30.07%</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">ATH:</span>
-                                <span class="stat-value">$4,891.70</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="crypto-card dogecoin">
-                        <div class="crypto-header">
-                            <h3>Dogecoin (DOGE)</h3>
-                            <span class="crypto-symbol">Ð</span>
-                        </div>
-                        <div class="price-section">
-                            <div class="current-price">$0.2158</div>
-                            <div class="price-change negative">-2.36% (-$0.0053)</div>
-                        </div>
-                        <div class="crypto-stats">
-                            <div class="stat">
-                                <span class="stat-label">Market Cap:</span>
-                                <span class="stat-value">$28.94B</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">Year Change:</span>
-                                <span class="stat-value positive">+31.85%</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-label">ATH:</span>
-                                <span class="stat-value">$0.7376</span>
+                    <div class="overview-sections">
+                        <div class="section-card">
+                            <h3>Recent News Preview</h3>
+                            <div id="newsPreview" class="news-preview">
+                                <!-- News items will be inserted here -->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="quick-stats">
-                    <h2>Quick Stats</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h4>Total Market Cap</h4>
-                            <p class="big-number">$2.40T</p>
+                <!-- Bitcoin Page -->
+                <div id="bitcoinPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Bitcoin (BTC) Analysis</h2>
+                    </div>
+                    
+                    <div class="coin-details">
+                        <div class="coin-price-section">
+                            <div class="current-price">
+                                <span class="price-label">Current Price</span>
+                                <span class="price-value" id="btc-detail-price">$--</span>
+                                <span class="price-change" id="btc-detail-change">--</span>
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <h4>Best YoY Performance</h4>
-                            <p class="big-number positive">Bitcoin +56.48%</p>
-                        </div>
-                        <div class="stat-card">
-                            <h4>ETF Inflows (May)</h4>
-                            <p class="big-number">$3.73B</p>
-                        </div>
-                        <div class="stat-card">
-                            <h4>Policy Events (2025)</h4>
-                            <p class="big-number">6 Major Changes</p>
+                        
+                        <div class="analysis-content">
+                            <div class="analysis-card">
+                                <h4>Technical Analysis</h4>
+                                <p>Bitcoin continues to show strong bullish momentum with institutional adoption driving long-term growth. The recent price action suggests continued upward pressure as demand from corporate treasuries and ETFs increases.</p>
+                                <div class="technical-indicators">
+                                    <div class="indicator">
+                                        <span class="indicator-label">RSI (14d):</span>
+                                        <span class="indicator-value">65.2</span>
+                                    </div>
+                                    <div class="indicator">
+                                        <span class="indicator-label">Moving Average (50d):</span>
+                                        <span class="indicator-value">$98,245</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analysis-card">
+                                <h4>Market Insights</h4>
+                                <p>Bitcoin's dominance in the crypto market remains strong at approximately 55%. Recent developments in institutional custody solutions and regulatory clarity continue to support long-term price appreciation.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="recent-highlights">
-                    <h2>Recent Highlights</h2>
-                    <div class="highlights-list">
-                        <div class="highlight-item">
-                            <span class="highlight-date">May 25, 2025</span>
-                            <span class="highlight-text">Bitcoin achieved new all-time high of $111,814</span>
+                <!-- Ethereum Page -->
+                <div id="ethereumPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Ethereum (ETH) Analytics</h2>
+                    </div>
+                    
+                    <div class="coin-details">
+                        <div class="coin-price-section">
+                            <div class="current-price">
+                                <span class="price-label">Current Price</span>
+                                <span class="price-value" id="eth-detail-price">$--</span>
+                                <span class="price-change" id="eth-detail-change">--</span>
+                            </div>
                         </div>
-                        <div class="highlight-item">
-                            <span class="highlight-date">May 29, 2025</span>
-                            <span class="highlight-text">SEC clarified that protocol staking activities do not need securities registration</span>
-                        </div>
-                        <div class="highlight-item">
-                            <span class="highlight-date">May 30, 2025</span>
-                            <span class="highlight-text">Bitcoin ETFs saw $208.78M outflows while Ethereum ETFs gained $97.45M</span>
+                        
+                        <div class="analysis-content">
+                            <div class="analysis-card">
+                                <h4>DeFi Metrics</h4>
+                                <p>Ethereum's DeFi ecosystem continues to grow with over $100B in Total Value Locked (TVL). Layer 2 solutions have significantly reduced gas fees, making the network more accessible to retail users.</p>
+                                <div class="defi-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">TVL:</span>
+                                        <span class="stat-value">$112.5B</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Average Gas Fee:</span>
+                                        <span class="stat-value">12 gwei</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analysis-card">
+                                <h4>Network Activity</h4>
+                                <p>Daily active addresses on Ethereum have reached new highs, driven by increased DeFi activity and NFT trading. The upcoming network upgrades promise further improvements to scalability and efficiency.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Policy Changes Tab -->
-            <section id="policy" class="tab-panel">
-                <div class="section-header">
-                    <h2>Policy Changes & Regulatory Developments</h2>
-                    <div class="filters">
-                        <select id="policyFilter" class="form-control">
-                            <option value="all">All Cryptocurrencies</option>
-                            <option value="BTC">Bitcoin</option>
-                            <option value="ETH">Ethereum</option>
-                            <option value="DOGE">Dogecoin</option>
-                        </select>
+                <!-- Dogecoin Page -->
+                <div id="dogecoinPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Dogecoin (DOGE) Community</h2>
+                    </div>
+                    
+                    <div class="coin-details">
+                        <div class="coin-price-section">
+                            <div class="current-price">
+                                <span class="price-label">Current Price</span>
+                                <span class="price-value" id="doge-detail-price">$--</span>
+                                <span class="price-change" id="doge-detail-change">--</span>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-content">
+                            <div class="analysis-card">
+                                <h4>Community Sentiment</h4>
+                                <p>Dogecoin maintains strong community support with active social media engagement. Recent partnerships with payment processors have increased real-world utility for DOGE transactions.</p>
+                                <div class="sentiment-indicators">
+                                    <div class="sentiment-item">
+                                        <span class="sentiment-label">Social Sentiment:</span>
+                                        <span class="sentiment-value positive">Bullish</span>
+                                    </div>
+                                    <div class="sentiment-item">
+                                        <span class="sentiment-label">Community Score:</span>
+                                        <span class="sentiment-value">8.7/10</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analysis-card">
+                                <h4>Meme Coin Market</h4>
+                                <p>As the original meme coin, Dogecoin continues to lead the meme token sector. Its established brand recognition and celebrity endorsements provide unique market advantages.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="timeline" id="policyTimeline"></div>
-            </section>
 
-            <!-- Price Predictions Tab -->
-            <section id="predictions" class="tab-panel">
-                <div class="section-header">
-                    <h2>2025 & 2026 Price Predictions</h2>
-                </div>
-                <div class="predictions-grid">
-                    <div class="prediction-card bitcoin">
-                        <h3>Bitcoin (BTC)</h3>
-                        <div class="prediction-year">
-                            <h4>2025 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $120,000</span>
-                                <span class="range-item">High: $200,000</span>
-                                <span class="range-item avg">Average: $160,000</span>
-                            </div>
-                        </div>
-                        <div class="prediction-year">
-                            <h4>2026 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $180,000</span>
-                                <span class="range-item">High: $300,000</span>
-                                <span class="range-item avg">Average: $240,000</span>
-                            </div>
-                        </div>
-                        <div class="prediction-sources">
-                            <h5>Expert Sources:</h5>
-                            <ul>
-                                <li>Anthony Scaramucci: $170K</li>
-                                <li>Investing Haven: $151K-$181K</li>
-                                <li>ARK Invest: $300K-$1.5M by 2030</li>
-                            </ul>
-                        </div>
+                <!-- News Page -->
+                <div id="newsPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Cryptocurrency News</h2>
                     </div>
+                    
+                    <div id="newsContainer" class="news-container">
+                        <!-- News articles will be inserted here -->
+                    </div>
+                </div>
 
-                    <div class="prediction-card ethereum">
-                        <h3>Ethereum (ETH)</h3>
-                        <div class="prediction-year">
-                            <h4>2025 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $1,669</span>
-                                <span class="range-item">High: $4,905</span>
-                                <span class="range-item avg">Average: $3,180</span>
-                            </div>
-                        </div>
-                        <div class="prediction-year">
-                            <h4>2026 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $4,125</span>
-                                <span class="range-item">High: $8,420</span>
-                                <span class="range-item avg">Average: $6,272</span>
-                            </div>
-                        </div>
-                        <div class="prediction-sources">
-                            <h5>Expert Sources:</h5>
-                            <ul>
-                                <li>Investing Haven: $1,669-$4,905</li>
-                                <li>CoinDCX: $3,500-$3,700</li>
-                                <li>Julian Hosp: $11,111</li>
-                            </ul>
-                        </div>
+                <!-- Policy Page -->
+                <div id="policyPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>Regulatory & Policy Updates</h2>
                     </div>
+                    
+                    <div id="policyContainer" class="policy-container">
+                        <!-- Policy updates will be inserted here -->
+                    </div>
+                </div>
 
-                    <div class="prediction-card dogecoin">
-                        <h3>Dogecoin (DOGE)</h3>
-                        <div class="prediction-year">
-                            <h4>2025 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $0.177</span>
-                                <span class="range-item">High: $0.776</span>
-                                <span class="range-item avg">Average: $0.341</span>
-                            </div>
-                        </div>
-                        <div class="prediction-year">
-                            <h4>2026 Forecasts</h4>
-                            <div class="prediction-range">
-                                <span class="range-item">Low: $0.449</span>
-                                <span class="range-item">High: $1.88</span>
-                                <span class="range-item avg">Average: $1.165</span>
-                            </div>
-                        </div>
-                        <div class="prediction-sources">
-                            <h5>Expert Sources:</h5>
-                            <ul>
-                                <li>Investing Haven: $0.161-$0.776</li>
-                                <li>Benzinga: $0.172-$0.731</li>
-                                <li>Javon Marks: $1.25</li>
-                            </ul>
-                        </div>
+                <!-- Predictions Page -->
+                <div id="predictionsPage" class="page-content hidden">
+                    <div class="page-header">
+                        <h2>2025 Price Predictions</h2>
+                    </div>
+                    
+                    <div id="predictionsContainer" class="predictions-container">
+                        <!-- Predictions will be inserted here -->
                     </div>
                 </div>
-            </section>
-
-            <!-- Major News Events Tab -->
-            <section id="news" class="tab-panel">
-                <div class="section-header">
-                    <h2>Major News Events & Market Milestones</h2>
-                    <div class="filters">
-                        <select id="newsFilter" class="form-control">
-                            <option value="all">All Events</option>
-                            <option value="Milestone">Milestones</option>
-                            <option value="Institutional">Institutional</option>
-                            <option value="Mixed">Mixed Impact</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="news-timeline" id="newsTimeline"></div>
-            </section>
-
-            <!-- Price Performance Tab -->
-            <section id="performance" class="tab-panel">
-                <div class="section-header">
-                    <h2>May 2025 Price Performance</h2>
-                </div>
-                <div class="chart-container">
-                    <canvas id="priceChart" height="400"></canvas>
-                </div>
-                <div class="performance-stats">
-                    <div class="performance-grid">
-                        <div class="performance-card bitcoin">
-                            <h4>Bitcoin (BTC)</h4>
-                            <div class="perf-stat">
-                                <span>May High:</span>
-                                <span>$111,560.40</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Low:</span>
-                                <span>$94,235.75</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Change:</span>
-                                <span class="positive">+12.22%</span>
-                            </div>
-                        </div>
-                        <div class="performance-card ethereum">
-                            <h4>Ethereum (ETH)</h4>
-                            <div class="perf-stat">
-                                <span>May High:</span>
-                                <span>$2,676.64</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Low:</span>
-                                <span>$1,794.05</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Change:</span>
-                                <span class="positive">+46.78%</span>
-                            </div>
-                        </div>
-                        <div class="performance-card dogecoin">
-                            <h4>Dogecoin (DOGE)</h4>
-                            <div class="perf-stat">
-                                <span>May High:</span>
-                                <span>$0.2481</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Low:</span>
-                                <span>$0.1706</span>
-                            </div>
-                            <div class="perf-stat">
-                                <span>May Change:</span>
-                                <span class="positive">+25.22%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
     </div>
 
