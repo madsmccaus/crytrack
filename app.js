@@ -1,4 +1,4 @@
-// app.js (module type required in index.html)
+// app.js (use as a module in index.html)
 
 async function fetchPrices() {
   const prices = {
@@ -55,4 +55,32 @@ async function fetchPrices() {
     console.error('CryptoCompare failed:', err);
   }
 
-  r
+  return {
+    BTC: average(prices.BTC),
+    ETH: average(prices.ETH),
+    DOGE: average(prices.DOGE)
+  };
+}
+
+function average(arr) {
+  const valid = arr.filter(n => typeof n === 'number' && !isNaN(n));
+  const sum = valid.reduce((a, b) => a + b, 0);
+  return valid.length ? (sum / valid.length).toFixed(2) : 'N/A';
+}
+
+async function updateDashboardPrices() {
+  const prices = await fetchPrices();
+
+  const btcElem = document.querySelector('.bitcoin .current-price');
+  const ethElem = document.querySelector('.ethereum .current-price');
+  const dogeElem = document.querySelector('.dogecoin .current-price');
+
+  if (btcElem) btcElem.textContent = `$${prices.BTC}`;
+  if (ethElem) ethElem.textContent = `$${prices.ETH}`;
+  if (dogeElem) dogeElem.textContent = `$${prices.DOGE}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateDashboardPrices();                     // Initial fetch
+  setInterval(updateDashboardPrices, 60000);   // Refresh every 60s
+});
