@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Multi-Crypto Dashboard: Bitcoin, Ethereum & Dogecoin Tracker</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>Multi-Crypto Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body data-color-scheme="dark">
   <div class="container">
-    <!-- Header -->
     <header class="header">
       <div class="header-content">
         <h1>Multi-Crypto Dashboard: Bitcoin, Ethereum & Dogecoin Tracker</h1>
@@ -17,7 +16,6 @@
       </div>
     </header>
 
-    <!-- Tab Navigation -->
     <nav class="tab-nav">
       <button class="tab-button active" data-tab="overview">Overview</button>
       <button class="tab-button" data-tab="policy">Policy Changes</button>
@@ -27,14 +25,11 @@
       <button id="themeToggle" class="btn btn--secondary">🌙 Toggle Theme</button>
     </nav>
 
-    <!-- Tab Content -->
     <main class="tab-content">
-      <!-- Overview Tab -->
       <section id="overview" class="tab-panel active">
-        <!-- [Overview content unchanged – keep what you have here] -->
+        <!-- Your existing overview content goes here -->
       </section>
 
-      <!-- Policy Changes Tab -->
       <section id="policy" class="tab-panel">
         <div class="section-header">
           <h2>Policy Changes & Regulatory Developments</h2>
@@ -50,24 +45,20 @@
         <div class="timeline" id="policyTimeline"></div>
       </section>
 
-      <!-- Price Predictions Tab -->
       <section id="predictions" class="tab-panel">
-        <!-- [Your existing predictions content goes here] -->
+        <!-- Your predictions content -->
       </section>
 
-      <!-- Major News Events Tab -->
       <section id="news" class="tab-panel">
-        <!-- [Your existing major news events content goes here] -->
+        <!-- Your news content -->
       </section>
 
-      <!-- Price Performance Tab -->
       <section id="performance" class="tab-panel">
-        <!-- [Your existing performance content goes here] -->
+        <!-- Your performance content -->
       </section>
     </main>
   </div>
 
-  <!-- Load your app logic -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
