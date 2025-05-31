@@ -82,6 +82,43 @@ async function updateDashboardPrices() {
 
 // === Initialize Everything Once DOM is Ready ===
 document.addEventListener('DOMContentLoaded', () => {
+  async function fetchPolicyNews() {
+  const endpoint = 'https://api.rss2json.com/v1/api.json?rss_url=https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml';
+
+  try {
+    const res = await fetch(endpoint);
+    const data = await res.json();
+
+    const filtered = data.items.filter(item =>
+      /sec|regulation|policy|crypto law|cftc|mica|executive order/i.test(item.title + item.description)
+    );
+
+    renderPolicyNews(filtered.slice(0, 6)); // Top 6 relevant items
+  } catch (err) {
+    console.error('Policy news fetch failed:', err);
+  }
+}
+
+function renderPolicyNews(articles) {
+  const container = document.getElementById('policyTimeline');
+  if (!container) return;
+
+  container.innerHTML = articles
+    .map(article => `
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card__body">
+          <h3 style="margin-bottom: 8px;">${article.title}</h3>
+          <p style="color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px;">
+            ${new Date(article.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </p>
+          <p>${article.description.slice(0, 200)}...</p>
+          <a href="${article.link}" target="_blank" class="btn btn--sm btn--outline" style="margin-top: 12px;">Read more</a>
+        </div>
+      </div>
+    `)
+    .join('');
+}
+
   // === Theme Setup ===
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
