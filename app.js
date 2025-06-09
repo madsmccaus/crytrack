@@ -252,8 +252,12 @@ class CryptoDash {
         // Set a short timeout for API calls
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
+
         try {
+            if (!navigator.onLine) {
+                throw new Error('offline');
+            }
+
             const response = await fetch(priceUrl, {
                 signal: controller.signal,
                 headers: {
