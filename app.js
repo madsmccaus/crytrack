@@ -4,7 +4,7 @@ class CryptoDash {
         this.apiBase = 'https://api.coingecko.com/api/v3';
         this.cmcApiBase = 'https://pro-api.coinmarketcap.com/v1';
         // Replace with your own CoinMarketCap API key if available
-        this.cmcApiKey = '';
+        this.cmcApiKey = '99279fc6-7f68-45df-89dd-a7e2c64ddf75';
         this.refreshInterval = 30000; // 30 seconds
         this.currentPage = 'overview';
         this.cryptoData = {};
