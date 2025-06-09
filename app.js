@@ -2,6 +2,9 @@
 class CryptoDash {
     constructor() {
         this.apiBase = 'https://api.coingecko.com/api/v3';
+        this.cmcApiBase = 'https://pro-api.coinmarketcap.com/v1';
+        // Replace with your own CoinMarketCap API key if available
+        this.cmcApiKey = '';
         this.refreshInterval = 30000; // 30 seconds
         this.currentPage = 'overview';
         this.cryptoData = {};
@@ -247,9 +250,64 @@ class CryptoDash {
     }
     
     async fetchCryptoData() {
+        try {
+            const [gecko, cmc] = await Promise.all([
+                this.fetchCoinGeckoData().catch(() => null),
+                this.fetchCoinMarketCapData().catch(() => null)
+            ]);
+
+            if (gecko && cmc) {
+                this.cryptoData = this.averageData(gecko, cmc);
+            } else if (gecko) {
+                this.cryptoData = gecko;
+            } else if (cmc) {
+                this.cryptoData = cmc;
+            } else {
+                throw new Error('Both APIs failed');
+            }
+        } catch (error) {
+            // Always fall back to mock data
+            this.cryptoData = { ...this.mockCryptoData };
+            // Add some randomness to mock data to simulate live updates
+            this.addRandomnessToMockData();
+        }
+    }
+
+    async fetchCoinGeckoData() {
         const priceUrl = `${this.apiBase}/simple/price?ids=bitcoin,ethereum,dogecoin&vs_currencies=usd&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true`;
-        
-        // Set a short timeout for API calls
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        try {
+            if (!navigator.onLine) {
+                throw new Error('offline');
+            }
+
+            const response = await fetch(priceUrl, {
+                signal: controller.signal,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    async fetchCoinMarketCapData() {
+        if (!this.cmcApiKey) {
+            throw new Error('CoinMarketCap API key missing');
+        }
+
+        const priceUrl = `${this.cmcApiBase}/cryptocurrency/quotes/latest?symbol=BTC,ETH,DOGE&convert=USD`;
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -262,25 +320,55 @@ class CryptoDash {
                 signal: controller.signal,
                 headers: {
                     'Accept': 'application/json',
+                    'X-CMC_PRO_API_KEY': this.cmcApiKey
                 }
             });
-            
+
             clearTimeout(timeoutId);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
-            const data = await response.json();
-            this.cryptoData = data;
-        } catch (error) {
+
+            const json = await response.json();
+            return {
+                bitcoin: this.parseCmcQuote(json, 'BTC'),
+                ethereum: this.parseCmcQuote(json, 'ETH'),
+                dogecoin: this.parseCmcQuote(json, 'DOGE')
+            };
+        } finally {
             clearTimeout(timeoutId);
-            // Always fall back to mock data
-            this.cryptoData = { ...this.mockCryptoData };
-            
-            // Add some randomness to mock data to simulate live updates
-            this.addRandomnessToMockData();
         }
+    }
+
+    parseCmcQuote(data, symbol) {
+        const quote = data?.data?.[symbol]?.quote?.USD;
+        if (!quote) return null;
+        return {
+            usd: quote.price,
+            usd_24h_change: quote.percent_change_24h,
+            usd_market_cap: quote.market_cap,
+            usd_24h_vol: quote.volume_24h
+        };
+    }
+
+    averageData(gecko, cmc) {
+        const result = {};
+        ['bitcoin', 'ethereum', 'dogecoin'].forEach(coin => {
+            const g = gecko[coin];
+            const c = cmc[coin];
+            if (g && c) {
+                result[coin] = {
+                    usd: (g.usd + c.usd) / 2,
+                    usd_24h_change: (g.usd_24h_change + c.usd_24h_change) / 2,
+                    usd_market_cap: (g.usd_market_cap + c.usd_market_cap) / 2,
+                    usd_24h_vol: (g.usd_24h_vol + c.usd_24h_vol) / 2
+                };
+            } else {
+                result[coin] = g || c;
+            }
+        });
+        return result;
     }
     
     addRandomnessToMockData() {
